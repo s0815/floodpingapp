@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">FloodPingApp</string>
+    <string name="edit_message">Hello First App</string>
+    <string name="button_send">Send</string>
+    <string name="button_start">Start</string>
+    <string name="button_stop">Stop</string>
+    <string-array name="ip_array">
+        <item>1.1.1.1</item>
+        <item>8.8.8.8</item>
+        <item>192.168.0.1</item>
+        <item>192.168.1.1</item>
+        <item>192.168.2.1</item>
+        <item>192.168.178.1</item>
+        <item>127.0.0.1</item>
+    </string-array>
+
+</resources>
