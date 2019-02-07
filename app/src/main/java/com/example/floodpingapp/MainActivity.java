@@ -96,6 +96,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // GIT TEST
+    // GIT TEST
+    // GIT TEST
+    // GIT TEST
+    // GIT TEST
+
     /** Called when the user taps the Send button */
     public void sendMessage(View view) {
         // Do something in response to button

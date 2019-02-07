@@ -1,4 +1,4 @@
-package com.example.firstapp;
+package com.example.floodpingapp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
