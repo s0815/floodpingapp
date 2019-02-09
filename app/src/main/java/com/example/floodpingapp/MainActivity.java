@@ -17,16 +17,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-// TEST2 GIT
-// TEST2 GIT
-// TEST2 GIT
 
 public class MainActivity extends AppCompatActivity {
 
     private static MainActivity instance;
 
     private static boolean pingThreadRunning = false;
-    private Thread thread;
+
+    private PingAsyncTask pingAt;
+
     private Button btnClick;
 
     private Spinner ipSpinner;
@@ -98,11 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // GIT TEST
-    // GIT TEST
-    // GIT TEST
-    // GIT TEST
-    // GIT TEST
 
     /** Called when the user taps the Send button */
     public void sendMessage(View view) {
@@ -117,26 +111,19 @@ public class MainActivity extends AppCompatActivity {
 
         pingDestIP= default_gw_editText.getText().toString();
 
-        PingThread pingThread = new PingThread(pingDestIP);
-
         ///////////// https://www.toptal.com/android/android-threading-all-you-need-to-know
         //////////// AsyncTask
 
 
         if (pingThreadRunning==false){
-//            pingThread = new PingThread((TextView) findViewById(R.id.textPingResult), pingDestIP);
-            thread = new Thread(pingThread);
-            System.out.println("pingThread "+pingThread);
-            System.out.println("pingThread instance " + pingThread.getInstance());
-            thread.setDaemon(true);
-            thread.start();
+            pingAt = new PingAsyncTask(pingDestIP);
+            pingAt.execute(pingDestIP);
             btnClick.setText("Stop");
             pingThreadRunning=true;
 
         } else {
-            //pingThread.stop();
+            pingAt.cancel(true);
 
-            pingThread.isStopped.set(true);
             btnClick.setText("Start");
             pingThreadRunning=false;
         }
