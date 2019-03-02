@@ -56,7 +56,7 @@ public class PingAsyncTask extends AsyncTask<String, Void, Void> {
         while(! isCancelled() ) {
             pingCounter++;
             textCounter++;
-            if (textCounter > 800) {
+            if (textCounter > 820) {
                 textCounter = 0;
                 pingString = "";
             }
@@ -79,8 +79,6 @@ public class PingAsyncTask extends AsyncTask<String, Void, Void> {
                 pingString += "X";
                 lossCounter += 1;
             }
-
-            //paintDia();
 
             mainActivity.updateTextPingResult(pingString);
             lossPercent = lossCounter * 100.0 / pingCounter;
