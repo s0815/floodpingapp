@@ -1,22 +1,13 @@
 package com.example.floodpingapp;
 
 import android.os.AsyncTask;
-import android.widget.TextView;
-
 import com.stealthcopter.networktools.Ping;
 import com.stealthcopter.networktools.ping.PingResult;
-
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PingAsyncTask extends AsyncTask<String, Void, Void> {
 
-    public AtomicBoolean isStopped=new AtomicBoolean(false);
-
-    public PingAsyncTask instance;
-
-    private TextView pingText;
     private String pingDestIP;
 
     private ArrayList<Float> pingTimesList = new ArrayList<>();
@@ -28,10 +19,6 @@ public class PingAsyncTask extends AsyncTask<String, Void, Void> {
     public PingAsyncTask(String ip){
         //this.pingText=pingText;
         this.pingDestIP=ip;
-    }
-
-    public PingAsyncTask getInstance(){
-        return instance;
     }
 
     private String calcAvgPingTime(ArrayList<PingResult> pingArray){
@@ -52,52 +39,64 @@ public class PingAsyncTask extends AsyncTask<String, Void, Void> {
         return pingRes;
     }
 
+
     @Override
     protected Void doInBackground(String... strings) {
         //this.pingDestIP=strings[0];
-
-        instance=this;
-        System.out.println("PingThread instance: " + instance);
         PingResult pingResult=null;
 
         int textCounter=0;
         long pingCounter=0;
         long lossCounter=0;
+        double lossPercent=0;
+        double pingMax=0;
+        double pingMin=1000;
         float avgSum=0;
-        while(! isCancelled() ){
+
+        while(! isCancelled() ) {
             pingCounter++;
             textCounter++;
-            if(textCounter>640){
-                textCounter=0;
-                pingString="";
+            if (textCounter > 800) {
+                textCounter = 0;
+                pingString = "";
             }
-            pingResult=pingAddress(pingDestIP);
+            pingResult = pingAddress(pingDestIP);
 
-            if (pingResult.isReachable){
-                pingString+="O";
+            if (pingResult.isReachable) {
+                pingString += ".";
                 pingTimesList.add(pingResult.timeTaken);
-                avgSum+=pingResult.timeTaken;
+                if (pingResult.timeTaken<pingMin) {
+                    pingMin=pingResult.timeTaken;
+                }
+                if (pingResult.timeTaken>pingMax) {
+                    pingMax=pingResult.timeTaken;
+                }
+
+                avgSum += pingResult.timeTaken;
             }
 
             if (pingResult.hasError()) {
-                pingString+="X";
-                lossCounter+=1;
+                pingString += "X";
+                lossCounter += 1;
             }
 
+            //paintDia();
+
             mainActivity.updateTextPingResult(pingString);
+            lossPercent = lossCounter * 100.0 / pingCounter;
             String strPingTimes = "Loss: "
                     + String.valueOf(lossCounter)
-                    + " " + String.valueOf(lossCounter/pingCounter*100)
+                    + " " + String.format("%.2f", lossPercent)
                     + "%\n"
                     + "Pings: " + pingCounter
                     + " Avg Time: "
-                    + String.valueOf(avgSum/pingCounter);
+                    + String.format("%.3f", avgSum / pingCounter)
+                    + "\n"
+                    + "Max: " + String.format("%.3f", pingMax)
+                    + " Min: " + String.format("%.3f", pingMin);
 
             mainActivity.updateTextPingTimes(strPingTimes);
         }
         return null;
     }
-
-
-
 }

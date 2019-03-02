@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -27,14 +26,11 @@ public class MainActivity extends AppCompatActivity {
     private PingAsyncTask pingAt;
 
     private Button btnClick;
-
     private Spinner ipSpinner;
-
     private EditText default_gw_editText;
-
     private String pingDestIP;
 
-    private DhcpInfo get_dhcp(){
+    private DhcpInfo get_dhcp() {
         final WifiManager manager = (WifiManager) super.getApplicationContext().getSystemService(WIFI_SERVICE);
         return manager.getDhcpInfo();
     }
@@ -43,31 +39,30 @@ public class MainActivity extends AppCompatActivity {
         return Formatter.formatIpAddress(get_dhcp().ipAddress);
     }
 
-    private String get_gw_ip(){
+    private String get_gw_ip() {
         return Formatter.formatIpAddress(get_dhcp().gateway);
     }
 
-    public void updateTextPingResult(String str){
-        TextView txt= (TextView) findViewById(R.id.textPingResult);
+    public void updateTextPingResult(String str) {
+        TextView txt = (TextView) findViewById(R.id.textPingResult);
         txt.setText(str);
     }
 
-    public void updateTextPingTimes(String str){
-        TextView txt= (TextView) findViewById(R.id.textPingTimes);
+    public void updateTextPingTimes(String str) {
+        TextView txt = (TextView) findViewById(R.id.textPingTimes);
         txt.setText(str);
     }
 
-    public void updateTextDefaultGw(String str){
+    public void updateTextDefaultGw(String str) {
         default_gw_editText.setText(str);
     }
 
     private void createIpSpinner(String ip) {
         ipSpinner = (Spinner) findViewById(R.id.ipSpinner);
-
-        Context context=getApplicationContext();
+        Context context = getApplicationContext();
         ArrayList<String> ipList = new ArrayList<>();
         ipList.add(ip);
-        String[] resIpArray=context.getResources().getStringArray(R.array.ip_array);
+        String[] resIpArray = context.getResources().getStringArray(R.array.ip_array);
         ipList.addAll(Arrays.asList(resIpArray));
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this,
                 android.R.layout.simple_spinner_item, ipList);
@@ -77,19 +72,20 @@ public class MainActivity extends AppCompatActivity {
         ipSpinner.setOnItemSelectedListener(spiAct);
     }
 
-    public static MainActivity getInstance(){
+    public static MainActivity getInstance() {
         return instance;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        instance=this;
+        instance = this;
 
         default_gw_editText = (EditText) findViewById(R.id.editText);
-        EditText ip_address_editText = (EditText) findViewById(R.id.editText2);
-        pingDestIP=get_gw_ip();
+        TextView ip_address_editText = (TextView) findViewById(R.id.editText2);
+        pingDestIP = get_gw_ip();
         default_gw_editText.setText(pingDestIP);
         ip_address_editText.setText(get_ip());
 
@@ -97,8 +93,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    /** Called when the user taps the Send button */
+    /**
+     * Called when the user taps the Send button
+     */
     public void sendMessage(View view) {
         // Do something in response to button
 //        Intent intent = new Intent(this, DisplayMessageActivity.class);
@@ -106,30 +103,25 @@ public class MainActivity extends AppCompatActivity {
 //        String message = editText.getText().toString();
 //        intent.putExtra(EXTRA_MESSAGE, message);
 //        startActivity(intent);
-
         btnClick = (Button) findViewById(view.getId());
-
-        pingDestIP= default_gw_editText.getText().toString();
-
-        ///////////// https://www.toptal.com/android/android-threading-all-you-need-to-know
-        //////////// AsyncTask
+        pingDestIP = default_gw_editText.getText().toString();
 
 
-        if (pingThreadRunning==false){
+        if (pingThreadRunning == false) {
             pingAt = new PingAsyncTask(pingDestIP);
             pingAt.execute(pingDestIP);
             btnClick.setText("Stop");
-            pingThreadRunning=true;
+            pingThreadRunning = true;
 
         } else {
             pingAt.cancel(true);
-
             btnClick.setText("Start");
-            pingThreadRunning=false;
+            pingThreadRunning = false;
+
         }
 
 
-
     }
+
 
 }
