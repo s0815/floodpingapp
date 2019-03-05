@@ -1,11 +1,9 @@
 package com.example.floodpingapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.net.DhcpInfo;
-import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.format.Formatter;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,18 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText default_gw_editText;
     private String pingDestIP;
 
-    private DhcpInfo get_dhcp() {
-        final WifiManager manager = (WifiManager) super.getApplicationContext().getSystemService(WIFI_SERVICE);
-        return manager.getDhcpInfo();
-    }
-
-    private String get_ip() {
-        return Formatter.formatIpAddress(get_dhcp().ipAddress);
-    }
-
-    private String get_gw_ip() {
-        return Formatter.formatIpAddress(get_dhcp().gateway);
-    }
+    private NetworkHelper networkHelper = new NetworkHelper(this);
 
     public void updateTextPingResult(String str) {
         TextView txt = (TextView) findViewById(R.id.textPingResult);
@@ -72,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
         ipSpinner.setOnItemSelectedListener(spiAct);
     }
 
+    private void dialogIpInvalid(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Destination IP is invalid");
+        builder.setMessage("Please check and change your IP address.");
+        builder.setPositiveButton("OK", null);
+        builder.show();
+
+    }
+
     public static MainActivity getInstance() {
         return instance;
     }
@@ -79,17 +75,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String networkState="";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         instance = this;
-
         default_gw_editText = (EditText) findViewById(R.id.editText);
         TextView ip_address_editText = (TextView) findViewById(R.id.editText2);
-        pingDestIP = get_gw_ip();
+
+        networkState=networkHelper.getConnectionType();
+
+
+        pingDestIP = networkHelper.getGwIp();
         default_gw_editText.setText(pingDestIP);
-        ip_address_editText.setText(get_ip());
+        ip_address_editText.setText(networkHelper.getIp());
 
         createIpSpinner(pingDestIP);
+
+
 
     }
 
@@ -97,27 +99,24 @@ public class MainActivity extends AppCompatActivity {
      * Called when the user taps the Send button
      */
     public void sendMessage(View view) {
-        // Do something in response to button
-//        Intent intent = new Intent(this, DisplayMessageActivity.class);
-//        EditText editText = (EditText) findViewById(R.id.editText);
-//        String message = editText.getText().toString();
-//        intent.putExtra(EXTRA_MESSAGE, message);
-//        startActivity(intent);
+        boolean ipValid;
         btnClick = (Button) findViewById(view.getId());
         pingDestIP = default_gw_editText.getText().toString();
-
-
-        if (pingThreadRunning == false) {
-            pingAt = new PingAsyncTask(pingDestIP);
-            pingAt.execute(pingDestIP);
-            btnClick.setText("Stop");
-            pingThreadRunning = true;
+        ipValid= networkHelper.checkIpIsValid(pingDestIP);
+        if (ipValid) {
+            if (pingThreadRunning == false) {
+                pingAt = new PingAsyncTask(pingDestIP);
+                pingAt.execute(pingDestIP);
+                btnClick.setText("Stop");
+                pingThreadRunning = true;
+            } else {
+                pingAt.cancel(true);
+                btnClick.setText("Start");
+                pingThreadRunning = false;
+            }
 
         } else {
-            pingAt.cancel(true);
-            btnClick.setText("Start");
-            pingThreadRunning = false;
-
+            dialogIpInvalid();
         }
 
 
