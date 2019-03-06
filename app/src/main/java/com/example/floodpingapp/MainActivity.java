@@ -2,6 +2,7 @@ package com.example.floodpingapp;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -68,6 +69,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void dialogNoNetwork(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Network Error");
+        builder.setMessage("There is no mobile or wifi network. Check airplane mode is off.");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.show();
+    }
+
+
     public static MainActivity getInstance() {
         return instance;
     }
@@ -83,13 +98,17 @@ public class MainActivity extends AppCompatActivity {
         TextView ip_address_editText = (TextView) findViewById(R.id.editText2);
 
         networkState=networkHelper.getConnectionType();
+        if (networkState.equals("NO_NETWORK")) {
+            dialogNoNetwork();
 
+        } else {
+            pingDestIP = networkHelper.getGwIp();
+            default_gw_editText.setText(pingDestIP);
+            ip_address_editText.setText(networkHelper.getIp());
+            createIpSpinner(pingDestIP);
 
-        pingDestIP = networkHelper.getGwIp();
-        default_gw_editText.setText(pingDestIP);
-        ip_address_editText.setText(networkHelper.getIp());
+        }
 
-        createIpSpinner(pingDestIP);
 
 
 
