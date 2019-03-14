@@ -13,6 +13,13 @@ public class PingAsyncTask extends AsyncTask<String, Void, Void> {
     private ArrayList<Float> pingTimesList = new ArrayList<>();
 
     private String pingString = "";
+    double lossPercent=0;
+    long lossCounter=0;
+    long pingCounter=0;
+    float avgSum=0;
+    double pingMax=0;
+    double pingMin=1000;
+
 
     private MainActivity mainActivity = MainActivity.getInstance();
 
@@ -46,12 +53,7 @@ public class PingAsyncTask extends AsyncTask<String, Void, Void> {
         PingResult pingResult=null;
 
         int textCounter=0;
-        long pingCounter=0;
-        long lossCounter=0;
-        double lossPercent=0;
-        double pingMax=0;
-        double pingMin=1000;
-        float avgSum=0;
+
 
         while(! isCancelled() ) {
             pingCounter++;
@@ -80,20 +82,41 @@ public class PingAsyncTask extends AsyncTask<String, Void, Void> {
                 lossCounter += 1;
             }
 
-            mainActivity.updateTextPingResult(pingString);
-            lossPercent = lossCounter * 100.0 / pingCounter;
-            String strPingTimes = "Loss: "
-                    + String.valueOf(lossCounter)
-                    + " " + String.format("%.2f", lossPercent)
-                    + "%\n"
-                    + "Pings: " + pingCounter
-                    + " Avg Time: "
-                    + String.format("%.3f", avgSum / pingCounter)
-                    + "\n"
-                    + "Max: " + String.format("%.3f", pingMax)
-                    + " Min: " + String.format("%.3f", pingMin);
+            mainActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mainActivity.updateTextPingResult(pingString);
+                    lossPercent = lossCounter * 100.0 / pingCounter;
+                    String strPingTimes = "Loss: "
+                            + String.valueOf(lossCounter)
+                            + " " + String.format("%.2f", lossPercent)
+                            + "%\n"
+                            + "Pings: " + pingCounter
+                            + " Avg Time: "
+                            + String.format("%.3f", avgSum / pingCounter)
+                            + "\n"
+                            + "Max: " + String.format("%.3f", pingMax)
+                            + " Min: " + String.format("%.3f", pingMin);
 
-            mainActivity.updateTextPingTimes(strPingTimes);
+                    mainActivity.updateTextPingTimes(strPingTimes);
+
+                }
+            });
+
+//            mainActivity.updateTextPingResult(pingString);
+//            lossPercent = lossCounter * 100.0 / pingCounter;
+//            String strPingTimes = "Loss: "
+//                    + String.valueOf(lossCounter)
+//                    + " " + String.format("%.2f", lossPercent)
+//                    + "%\n"
+//                    + "Pings: " + pingCounter
+//                    + " Avg Time: "
+//                    + String.format("%.3f", avgSum / pingCounter)
+//                    + "\n"
+//                    + "Max: " + String.format("%.3f", pingMax)
+//                    + " Min: " + String.format("%.3f", pingMin);
+//
+//            mainActivity.updateTextPingTimes(strPingTimes);
         }
         return null;
     }
