@@ -78,8 +78,10 @@ public class PingAsyncTask extends AsyncTask<String, Void, Void> {
             }
 
             if (pingResult.hasError()) {
-                pingString += "X";
-                lossCounter += 1;
+                if(!isCancelled()){
+                    pingString += "X";
+                    lossCounter += 1;
+                }
             }
 
             mainActivity.runOnUiThread(new Runnable() {
@@ -103,20 +105,6 @@ public class PingAsyncTask extends AsyncTask<String, Void, Void> {
                 }
             });
 
-//            mainActivity.updateTextPingResult(pingString);
-//            lossPercent = lossCounter * 100.0 / pingCounter;
-//            String strPingTimes = "Loss: "
-//                    + String.valueOf(lossCounter)
-//                    + " " + String.format("%.2f", lossPercent)
-//                    + "%\n"
-//                    + "Pings: " + pingCounter
-//                    + " Avg Time: "
-//                    + String.format("%.3f", avgSum / pingCounter)
-//                    + "\n"
-//                    + "Max: " + String.format("%.3f", pingMax)
-//                    + " Min: " + String.format("%.3f", pingMin);
-//
-//            mainActivity.updateTextPingTimes(strPingTimes);
         }
         return null;
     }
