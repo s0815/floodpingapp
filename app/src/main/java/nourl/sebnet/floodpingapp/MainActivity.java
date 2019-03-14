@@ -1,4 +1,4 @@
-package com.example.floodpingapp;
+package nourl.sebnet.floodpingapp;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+
+import nourl.sebnet.floodpingapp.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,11 +84,9 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-
     public static MainActivity getInstance() {
         return instance;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,28 +100,18 @@ public class MainActivity extends AppCompatActivity {
         networkState=networkHelper.getConnectionType();
         if (networkState.equals("NO_NETWORK")) {
             dialogNoNetwork();
-
         } else {
             pingDestIP = networkHelper.getGwIp();
             default_gw_editText.setText(pingDestIP);
             ip_address_editText.setText(networkHelper.getIp());
             createIpSpinner(pingDestIP);
-
         }
-
-
-
-
     }
 
-    /**
-     * Called when the user taps the Send button
-     */
-    public void sendMessage(View view) {
-        boolean ipValid;
+    public void startButton(View view) {
         btnClick = (Button) findViewById(view.getId());
         pingDestIP = default_gw_editText.getText().toString();
-        ipValid= networkHelper.checkIpIsValid(pingDestIP);
+        boolean ipValid= networkHelper.checkIpIsValid(pingDestIP);
         if (ipValid) {
             if (pingThreadRunning == false) {
                 pingAt = new PingAsyncTask(pingDestIP);
@@ -137,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             dialogIpInvalid();
         }
-
 
     }
 

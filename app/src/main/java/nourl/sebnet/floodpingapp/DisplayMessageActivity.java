@@ -1,10 +1,11 @@
-package com.example.floodpingapp;
+package nourl.sebnet.floodpingapp;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import nourl.sebnet.floodpingapp.R;
 
 
 public class DisplayMessageActivity extends AppCompatActivity {

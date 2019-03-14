@@ -1,4 +1,4 @@
-package com.example.floodpingapp;
+package nourl.sebnet.floodpingapp;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -33,7 +33,7 @@ public class NetworkHelper {
             System.out.println(i);
         }
         //return Formatter.formatIpAddress(get_dhcp().ipAddress);
-        return cmdResult[8];
+        return cmdResult[cmdResult.length-3];
     }
 
     public String getGwIp() {
@@ -78,6 +78,7 @@ public class NetworkHelper {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        line=line.replace("  "," ");
         return line.split(" ");
 
     }

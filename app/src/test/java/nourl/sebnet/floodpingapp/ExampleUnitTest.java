@@ -1,4 +1,4 @@
-package com.example.floodpingapp;
+package nourl.sebnet.floodpingapp;
 
 import org.junit.Test;
 

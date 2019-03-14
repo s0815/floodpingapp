@@ -1,4 +1,4 @@
-package com.example.floodpingapp;
+package nourl.sebnet.floodpingapp;
 
 import android.os.AsyncTask;
 import com.stealthcopter.networktools.Ping;
