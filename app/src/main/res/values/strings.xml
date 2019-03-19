@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FloodPingApp</string>
+    <string name="app_name">Flood Ping</string>
     <string name="edit_message">Hello First App</string>
     <string name="button_send">Send</string>
     <string name="button_start">Start</string>
