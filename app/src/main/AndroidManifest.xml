@@ -22,7 +22,7 @@
                 android:value="nourl.sebnet.floodpingapp.MainActivity" />
         </activity>
 
-        <activity android:name="nourl.sebnet.floodpingapp.MainActivity">
+        <activity android:name="nourl.sebnet.floodpingapp.MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
