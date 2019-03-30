@@ -6,8 +6,8 @@ android {
         applicationId "nourl.sebnet.floodpingapp"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 101
-        versionName "1.01"
+        versionCode 102
+        versionName "1.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

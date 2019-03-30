@@ -83,6 +83,14 @@ public class MainActivity extends AppCompatActivity {
         });
         builder.show();
     }
+    private void dialogMobileGatewayNotPingable() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Mobile Network Gateway Not Pingable");
+        builder.setMessage("Your providers next router is not pingable. Destination will switch to 1.1.1.1. If you only want to test your wifi, please turn it on");
+        builder.setPositiveButton("OK", null);
+        builder.show();
+
+    }
 
     public static MainActivity getInstance() {
         return instance;
@@ -100,13 +108,19 @@ public class MainActivity extends AppCompatActivity {
         networkState=networkHelper.getConnectionType();
         if (networkState.equals("NO_NETWORK")) {
             dialogNoNetwork();
+        } else if (networkState.equals("MOBILE")) {
+            dialogMobileGatewayNotPingable();
+            pingDestIP = "1.1.1.1";
+
         } else {
             pingDestIP = networkHelper.getGwIp();
-            default_gw_editText.setText(pingDestIP);
-            ip_address_editText.setText(networkHelper.getIp());
-            createIpSpinner(pingDestIP);
         }
+        default_gw_editText.setText(pingDestIP);
+        ip_address_editText.setText(networkHelper.getIp());
+        createIpSpinner(pingDestIP);
+
     }
+
 
     public void startButton(View view) {
         btnClick = (Button) findViewById(view.getId());
